@@ -13,6 +13,7 @@ button { font: inherit; }
 .intro { width: min(100%, 540px); }
 .eyebrow { color: #9abdbf; font-size: 10px; letter-spacing: .22em; margin: 0 0 28px; }
 h1 { font-weight: 500; font-size: clamp(38px, 6vw, 64px); letter-spacing: -.055em; line-height: 1.3; margin: 0; }
+#intro-title { white-space: nowrap; }
 .description { color: #aab6c2; font-size: 15px; margin: 24px 0 38px; }
 #start-button { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 20px 24px; border: 1px solid #a2cacb; background: #b8d7d6; color: #13252a; cursor: pointer; font-size: 15px; transition: background .15s; }
 #start-button:hover:not(:disabled) { background: #d2ebea; }

@@ -68,8 +68,8 @@ export function startApp() {
       preview.pause();
       updateDucking();
       stopPulses();
-      button.textContent = '클릭해서 계속하기 ↗';
-      message.textContent = '잠시 멈췄습니다. 다시 클릭하면 현재 위치에서 이어집니다.';
+      button.textContent = '클릭해서 계속하기';
+      message.textContent = '';
       button.focus();
     }
   }, config.spaces, () => scene.userData.space);
@@ -95,7 +95,7 @@ export function startApp() {
     target => target.isExit ? entrance.beginReturn(target) : entrance.begin(target), () => entrance.busy,
     () => cyberpunkSway.withCamera(camera, pickDoor));
   button.disabled = false;
-  button.innerHTML = '클릭해서 시작 <span aria-hidden="true">↗</span>';
+  button.textContent = '클릭해서 시작';
   button.addEventListener('click', () => {
     void preview.unlock();
     // Both requests start in the user gesture; neither blocks the other.
