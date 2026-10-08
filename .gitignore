@@ -1,0 +1,13 @@
+# 기획·개발 기록은 로컬에만 보관한다. 공개 설명은 README만 포함한다.
+/*.md
+!/README.md
+/verification/
+/참고이미지/
+/scripts/
+/server.mjs
+/start-server.cmd
+/.codex/
+/.agents/
+*.log
+.DS_Store
+Thumbs.db

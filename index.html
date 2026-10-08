@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080b12" />
+    <title>3D 음악 공간 · 류준모</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas id="world" aria-label="WASD와 마우스로 탐험하는 3D 공간"></canvas>
+    <header class="project-label"><span class="status-dot"></span> 3D 음악 공간 <span class="stage" hidden>08 / 빛의 문</span></header>
+    <main id="start-screen" class="overlay">
+      <section class="intro" aria-labelledby="intro-title">
+        <p class="eyebrow">RYU JUNMO · ART & TECHNOLOGY</p>
+        <h1 id="intro-title">음악 속으로,<br />한 걸음.</h1>
+        <p id="intro-description" class="description">걸어 다니며 만나는 음악과 공간.</p>
+        <p class="platform-notice">PC의 크롬을 권장합니다 · 소리가 납니다</p>
+        <button id="start-button" type="button" disabled>공간 준비 중… <span aria-hidden="true">↗</span></button>
+        <p class="instructions"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 이동 <span>·</span> 마우스 시점 <span>·</span> <kbd>Esc</kbd> 잠시 멈춤</p>
+        <p id="message" role="status" aria-live="polite">문에 다가가 클릭하면 빛 속으로 들어갑니다.</p>
+        <button id="open-credits" class="credits-link" type="button" aria-haspopup="dialog">크레딧</button>
+        <details id="developer-controls" class="developer-controls" hidden>
+          <summary>개발용 · 로비 조정</summary>
+          <div class="developer-fields">
+            <label>공간 최대 음량 <input id="space-volume" type="number" min="0" max="1" step="0.05" aria-label="공간 최대 음량" /></label>
+            <label>음량 <input type="number" data-footstep="volume" aria-label="발소리 음량" /></label>
+            <label>간격 (초) <input type="number" data-footstep="intervalSeconds" aria-label="발소리 간격 (초)" /></label>
+            <label>잔향 (초) <input type="number" data-footstep="reverbSeconds" aria-label="발소리 잔향 (초)" /></label>
+            <label>문 활성 거리 <input id="door-activation-distance" type="number" aria-label="문 활성 거리" /></label>
+            <label>곡 예고 최대 음량 <input type="number" data-preview="maxVolume" aria-label="곡 예고 최대 음량" /></label>
+            <label>곡 페이드 (초) <input type="number" data-preview="fadeSeconds" aria-label="곡 페이드 (초)" /></label>
+            <label>발소리 감소량 (footstepDuck) <input type="number" data-duck="footstepDuck" aria-label="발소리 감소량" /></label>
+            <label>웅웅 감소량 (humDuck) <input type="number" data-duck="humDuck" aria-label="웅웅 감소량" /></label>
+            <label>아웃런 첫 박 (초) <input type="number" data-beat-offset="outrun" aria-label="아웃런 첫 박 오프셋 (초)" /></label>
+            <label>사이버펑크 첫 박 (초) <input type="number" data-beat-offset="cyberpunk" aria-label="사이버펑크 첫 박 오프셋 (초)" /></label>
+            <label>해변 첫 박 (초) <input type="number" data-beat-offset="beach" aria-label="해변 첫 박 오프셋 (초)" /></label>
+            <label>아웃런 체감 BPM <input type="number" data-bpm="outrun" aria-label="아웃런 체감 BPM" /></label>
+            <label>사이버펑크 체감 BPM <input type="number" data-bpm="cyberpunk" aria-label="사이버펑크 체감 BPM" /></label>
+            <label>해변 체감 BPM <input type="number" data-bpm="beach" aria-label="해변 체감 BPM" /></label>
+            <label>펄스 세기 <input type="number" data-pulse="strength" aria-label="펄스 세기" /></label>
+            <label>펄스 복귀 (초) <input type="number" data-pulse="returnSeconds" aria-label="펄스 복귀 시간 (초)" /></label>
+            <label>아웃런 막대 반응량 <input type="number" min="0" max="2" step="0.05" data-outrun-bars="amount" aria-label="아웃런 막대 반응량" /></label>
+            <label>물결 최대 지연 (초) <input type="number" min="0" max="0.3" step="0.01" data-outrun-bars="maxDelaySeconds" aria-label="물결 최대 지연 (초)" /></label>
+            <label>막대 패턴 고정 <select data-outrun-bars="pattern" aria-label="막대 패턴 고정"><option value="auto">자동 · 8박마다 전환</option><option value="a">가 · 석양에서 뒤로</option><option value="b">나 · 양옆에서 가운데로</option><option value="c">다 · 분홍·청록 교대</option><option value="d">라 · 무작위 흩뿌림</option></select></label>
+            <label>패턴 구분 강도 <input type="number" min="0" max="1" step="0.05" data-outrun-bars="patternStrength" aria-label="패턴 구분 강도" /></label>
+            <label>패턴 전환 간격 (박) <input type="number" min="1" max="64" step="1" data-outrun-bars="patternBeats" aria-label="패턴 전환 간격 (박)" /></label>
+            <label>마스크 밖 반응 비율 <input type="number" min="0.25" max="0.35" step="0.01" data-outrun-bars="outsideRatio" aria-label="마스크 밖 반응 비율" /></label>
+            <label>색 교대 비선택 비율 <input type="number" min="0.25" max="0.35" step="0.01" data-outrun-bars="colorOutsideRatio" aria-label="색 교대 비선택 비율" /></label>
+            <label>오브제 반응량 <input id="outrun-object-amount" type="number" min="0" max="2" step="0.05" aria-label="오브제 반응량" /></label>
+            <label>반복 아웃 (초) <input type="number" min="0" max="15" step="0.1" data-track-loop="outSeconds" aria-label="반복 아웃 시간 (초)" /></label>
+            <label>반복 쉼 (초) <input type="number" min="0" max="15" step="0.1" data-track-loop="restSeconds" aria-label="반복 쉼 시간 (초)" /></label>
+            <label>반복 인 (초) <input type="number" min="0" max="15" step="0.1" data-track-loop="inSeconds" aria-label="반복 인 시간 (초)" /></label>
+          </div>
+          <div class="tap-controls">
+            <div><button type="button" data-tap-tempo="outrun">아웃런 탭 템포</button><output data-tap-status="outrun">탭 대기</output></div>
+            <div><button type="button" data-tap-tempo="cyberpunk">사이버펑크 탭 템포</button><output data-tap-status="cyberpunk">탭 대기</output></div>
+            <div><button type="button" data-tap-tempo="beach">해변 탭 템포</button><output data-tap-status="beach">탭 대기</output></div>
+          </div>
+          <p>소리를 들으며 맞출 때는 재생 중 T 키를 박자에 맞춰 누르세요. 최근 8개 간격의 중앙값을 쓰며 2초 이상 쉬면 다시 시작합니다.</p>
+          <output id="beat-panel-readout">재생 없음 · 박 — · BPM —</output>
+          <label class="beat-click-option"><input id="beat-click" type="checkbox" /> 비트 확인음 (개발용)</label>
+          <p>Esc로 멈춘 뒤 조정하고 다시 걸어 보세요. 새로고침하면 config의 초기값으로 돌아갑니다.</p>
+          <button id="return-lobby" type="button" hidden>로비로 즉시 복귀(개발용)</button>
+        </details>
+      </section>
+      <footer>서강대학교 지식융합미디어학부 · 류준모</footer>
+    </main>
+    <dialog id="credits-dialog" aria-labelledby="credits-title">
+      <div class="credits-heading"><h2 id="credits-title">크레딧</h2><button id="close-credits" type="button" autofocus>닫기</button></div>
+      <p>류준모 · 서강대학교 지식융합미디어학부</p>
+      <p>음악을 인식하는 공간을 걸어 다니는 무료 인터랙티브 체험으로, 실시간 분석 대신 곡별로 정해 둔 박자에 반응합니다.</p>
+      <p>무료·비상업</p>
+      <p id="track-credits"></p>
+      <p id="ambience-credit"></p>
+      <p>3D 구현: three.js · MIT License</p>
+    </dialog>
+    <p id="audio-notice" class="audio-notice" role="status" hidden>소리를 시작하지 못했습니다. 공간은 무음으로 탐험할 수 있습니다.</p>
+    <p id="audio-loading" class="audio-loading" role="status" hidden>공간의 소리를 불러오는 중…</p>
+    <div id="hud" hidden>
+      <p id="beat-readout" class="beat-readout" hidden></p>
+      <div class="crosshair" aria-hidden="true"></div>
+      <p id="door-hint" class="door-hint" hidden></p>
+      <p id="door-notice" class="door-notice" role="status" aria-live="polite" hidden></p>
+      <p class="controls-hint">WASD 이동 <span>·</span> 마우스 시점 <span>·</span> Esc 잠시 멈춤</p>
+    </div>
+    <noscript><p class="noscript">이 체험은 JavaScript가 필요합니다. Chrome 설정에서 JavaScript를 허용해 주세요.</p></noscript>
+    <script type="module" src="./src/bootstrap.js"></script>
+  </body>
+</html>
